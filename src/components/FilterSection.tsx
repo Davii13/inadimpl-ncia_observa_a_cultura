@@ -95,7 +95,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ projetos, onSearch
               </select>
             </div>
 
-            <div className="field">
+            <div className="field" data-field="periodo">
               <label className="field-label">📅 Filtrar por Período</label>
               <div className="field-row">
                 <input

@@ -370,14 +370,18 @@ a {
 .field-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+.field-row .input {
+  min-width: 0;
+  flex: 1 1 0;
 }
 
 .field-row-sep {
   color: var(--text-muted);
   font-size: 13px;
   flex-shrink: 0;
-  padding-top: 20px;
 }
 
 .field-actions {
@@ -393,8 +397,12 @@ a {
 /* ===== GRID LAYOUT FOR FILTERS ===== */
 .filters-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px 24px;
+}
+
+.filters-grid .field[data-field='periodo'] {
+  min-width: 320px;
 }
 
 /* ===== TABLE ===== */
