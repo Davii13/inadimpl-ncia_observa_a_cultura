@@ -1,0 +1,185 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              COMO DEVE FICAR A TELA COM ESTILIZAÇÃO CORRETA                 ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+LAYOUT VISUAL ESPERADO
+═══════════════════════════════════════════════════════════════════════════════
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ OC  Observa Cultura                                           🔔  👤        │  ← NAVBAR
+│     Sistema SECULT                                                           │
+├──────────────────────┬───────────────────────────────────────────────────────┤
+│                      │                                                       │
+│ ⌂ Dashboard geral    │ Análise de Inadimplência                             │
+│                      │ Consulte dados de inadimplência por CPF...           │
+│ 📊 Dashboard ·       │                                                       │
+│    Fomento           │ [Limpar filtros]  [Atualizar]                        │
+│                      │                                                       │
+│ 📊 Dashboard ·       │ ╔════════════════════════════════════════════╗        │
+│    Readequação       │ ║ FILTROS                             [▼]   ║        │
+│                      │ ╠════════════════════════════════════════════╣        │
+│ 📊 Dashboard ·       │ ║ 📋 BUSCAR POR CPF                         ║        │
+│    Prestação         │ ║ ┌──────────────────────────────────────┐  ║        │
+│                      │ ║ │ 000.000.000-00                  [👁] │  ║        │
+│ 🔴 Análise ✓         │ ║ └──────────────────────────────────────┘  ║        │
+│    Inadimplência     │ ║                                            ║        │
+│                      │ ║ 📁 BUSCAR POR PROJETO                    ║        │
+│ 📋 Fomento · DI      │ ║ ┌──────────────────────────────────────┐  ║        │
+│                      │ ║ │ Selecione um projeto         [v]    │  ║        │
+│ 👥 Fomento ·         │ ║ └──────────────────────────────────────┘  ║        │
+│    Inscritos         │ ║                                            ║        │
+│                      │ ║ 📅 FILTRAR POR PERÍODO                   ║        │
+│ ─────────────────    │ ║ ┌──────────────┐  até  ┌──────────────┐  ║        │
+│                      │ ║ │ Data inicial │       │ Data final   │  ║        │
+│ D  Davi Nunes        │ ║ └──────────────┘       └──────────────┘  ║        │
+│    Carvalho          │ ║                                            ║        │
+│    Diretoria 1   [↓] │ ║ [🔍 Pesquisar]  [Limpar]                  ║        │
+│                      │ ╚════════════════════════════════════════════╝        │
+│                      │                                                       │
+│                      │ ╔════════════════════════════════════════════╗        │
+│    SIDEBAR           │ ║ INADIMPLENTES · Detalhamento            ║        │
+│    (À ESQUERDA)      │ ╠════════════════════════════════════════════╣        │
+│                      │ ║                                            ║        │
+│                      │ ║     Aplique filtros acima para            ║        │
+│                      │ ║     visualizar os inadimplentes           ║        │
+│                      │ ║                                            ║        │
+│                      │ ╚════════════════════════════════════════════╝        │
+│                      │                                                       │
+└──────────────────────┴───────────────────────────────────────────────────────┘
+
+
+CORES E ESTILOS
+═══════════════════════════════════════════════════════════════════════════════
+
+🎨 PALETA DE CORES:
+
+Fundo:              #0F1419 (Azul muito escuro - quase preto)
+Cards/Container:    #1A2B42 (Azul escuro)
+Bordas:             #2A3F5F (Azul médio)
+Texto Principal:    #FFFFFF (Branco)
+Texto Secundário:   #D1D5DB (Cinza claro)
+Texto Terciário:    #9CA3AF (Cinza médio)
+Ativo/Accent:       #0284C7 (Azul cyan)
+Vermelho (Ativo):   #EF4444
+Verde (Resolvido):  #22C55E
+Amarelo (Pendente): #FBBF24
+Cinza (Cancelado):  #6B7280
+
+
+ELEMENTOS VISUAIS
+═══════════════════════════════════════════════════════════════════════════════
+
+NAVBAR:
+  • Fundo: #1A2B42
+  • Borda inferior: 1px #2A3F5F
+  • Logo com círculo gradiente azul (OC)
+  • Texto branco
+  • Ícones cinza claros
+
+SIDEBAR:
+  • Fundo: #0F1419
+  • Borda direita: 1px #2A3F5F
+  • Menu itens com hover escuro
+  • Item ativo: #0284C7 (azul)
+  • Borda esquerda azul em item ativo
+  • User info ao final com fundo #1A2B42
+
+FILTROS (Card):
+  • Fundo: #1A2B42
+  • Borda: 1px #2A3F5F
+  • Inputs: fundo #0F1419, borda #2A3F5F
+  • Labels: texto #9CA3AF
+  • Botões: borda #2A3F5F, hover #1A2B42
+
+TABELA:
+  • Header: fundo #0F1419, texto #9CA3AF
+  • Linhas: alternadas com hover
+  • Bordas: 1px #2A3F5F
+  • Status com badges coloridos
+  • CPF mascarado por padrão
+
+
+SE NÃO ESTIVER APARECENDO
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Verifique se vê:
+   ✅ Fundo escuro (azul muito escuro quase preto)
+   ✅ Navbar no topo (OC + Observa Cultura)
+   ✅ Sidebar à esquerda
+   ✅ Card de filtros com borda
+   ✅ Inputs com fundo escuro
+   ✅ Texto branco
+
+2. Se vir tudo em branco/sem estilo:
+   → Abra DevTools (F12)
+   → Vá para Network
+   → Procure por arquivo .css
+   → Se tiver 404 ou 0 bytes = problema Tailwind
+   → Se tiver 5+ KB = CSS carregou (pode ser cache)
+
+3. Limpe cache:
+   → Ctrl + Shift + Delete
+   → Ou Ctrl + F5
+   → Ou abra em modo incógnito
+
+4. Reinicie dev server:
+   → Ctrl + C (no terminal)
+   → npm run dev
+
+
+FUNCIONALIDADES ESPERADAS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Navbar
+   • Logo "Observa Cultura" com gradiente azul
+   • Ícones de notificação e usuário
+   • Botão menu que abre/fecha sidebar
+
+✅ Sidebar
+   • Menu com 7 itens
+   • "Análise Inadimplência" destacada em azul
+   • Informações do usuário (Davi Nunes Carvalho)
+   • Botão logout
+
+✅ Filtros
+   • CPF com formatação automática
+   • Dropdown de projetos
+   • Date pickers para período
+   • Botões Pesquisar e Limpar
+
+✅ Tabela
+   • Mostra mensagem "Aplique filtros..." inicialmente
+   • CPF mascarado (123.***.***.90)
+   • Status com cores
+   • Linhas expandíveis
+   • Dados mockup aparecem ao pesquisar
+
+
+TESTE RÁPIDO
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Abra: http://localhost:5173
+2. Você deve ver:
+   ✅ Navbar azul escuro no topo
+   ✅ Sidebar azul escuro à esquerda
+   ✅ Título "Análise de Inadimplência"
+   ✅ Card de filtros com borda
+   ✅ Mensagem "Aplique filtros..."
+
+3. Digite "123" em CPF e clique Pesquisar
+4. Você deve ver:
+   ✅ Tabela aparece
+   ✅ Dados mockup carregam
+   ✅ Status colorido (vermelho/verde/amarelo)
+
+Se vir tudo isso = ✅ ESTILIZAÇÃO OK!
+Se não ver cores = siga o debug acima
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Desenvolvido com ❤️ em React + TypeScript + Tailwind CSS
+
+═══════════════════════════════════════════════════════════════════════════════
