@@ -28,9 +28,9 @@ const emptyFiltros: FiltrosInadimplencia = {
 };
 
 export const AnaliseInadimplencia: React.FC = () => {
-  const [resultados, setResultados] = useState<Inadimplente[]>([]);
+  const [resultados, setResultados] = useState<Inadimplente[]>(mockInadimplentes);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [hasSearched, setHasSearched] = useState(true);
   const [filtroAtivo, setFiltroAtivo] = useState(false);
   const [filtrosAtuais, setFiltrosAtuais] = useState<FiltrosInadimplencia>(emptyFiltros);
   const [resetKey, setResetKey] = useState(0);
@@ -118,8 +118,8 @@ export const AnaliseInadimplencia: React.FC = () => {
   };
 
   const handleClearFilters = () => {
-    setResultados([]);
-    setHasSearched(false);
+    setResultados(mockInadimplentes);
+    setHasSearched(true);
     setFiltroAtivo(false);
     setFiltrosAtuais(emptyFiltros);
     setResetKey((k) => k + 1);
