@@ -184,13 +184,6 @@ export const AnaliseInadimplencia: React.FC = () => {
         />
       </div>
 
-      {hasSearched && resultados.length > 0 && (
-        <div className="footer-note">
-          Mostrando <strong>{resultados.length}</strong> resultado(s)
-          {filtroAtivo && ' · Filtros aplicados'}
-        </div>
-      )}
-
       {isImportModalOpen && (
         <Modal title="Importação de Dados DMPC" onClose={() => setIsImportModalOpen(false)}>
           <ImportacaoDMPC

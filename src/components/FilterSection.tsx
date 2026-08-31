@@ -68,7 +68,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ projetos, onSearch
         <div className="panel-body">
           <div className="filters-grid">
             <div className="field">
-              <label className="field-label">📋 Buscar por CPF</label>
+              <label className="field-label">Buscar por CPF</label>
               <input
                 type="text"
                 className="input"
@@ -80,7 +80,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ projetos, onSearch
             </div>
 
             <div className="field">
-              <label className="field-label">📁 Buscar por Projeto</label>
+              <label className="field-label">Buscar por Projeto</label>
               <select
                 className="select"
                 value={filtros.projetoId}
@@ -96,7 +96,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ projetos, onSearch
             </div>
 
             <div className="field" data-field="periodo">
-              <label className="field-label">📅 Filtrar por Período</label>
+              <label className="field-label">Filtrar por Período</label>
               <div className="field-row">
                 <input
                   type="date"
@@ -116,7 +116,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ projetos, onSearch
             </div>
 
             <div className="field">
-              <label className="field-label">🔄 Situação da Alteração</label>
+              <label className="field-label">Situação da Alteração</label>
               <select
                 className="select"
                 value={filtros.alteracao}

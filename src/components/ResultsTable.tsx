@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, ChevronDown } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Eye, EyeOff, ChevronDown, ClipboardList, SearchX } from 'lucide-react';
 import { Inadimplente, HistoricoCPF } from '../types';
-import { maskCPF, formatCPF, getStatusLabel } from '../utils/formatters';
+import { maskCPF, formatCPF } from '../utils/formatters';
 import { HistoricoCPFTimeline } from './HistoricoCPFTimeline';
+import { Pagination } from './Pagination';
+import { useDragScroll } from '../hooks/useDragScroll';
 
 interface ResultsTableProps {
   data: Inadimplente[];
@@ -19,6 +21,16 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
 }) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [unmaskedCPFs, setUnmaskedCPFs] = useState<Set<string>>(new Set());
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const dragScrollRef = useDragScroll<HTMLDivElement>();
+
+  useEffect(() => {
+    setPage(1);
+  }, [data]);
+
+  const startIndex = (page - 1) * pageSize;
+  const paginatedData = data.slice(startIndex, startIndex + pageSize);
 
   const toggleRow = (id: string) => {
     const next = new Set(expandedRows);
@@ -44,7 +56,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
   if (!hasSearched) {
     return (
       <div className="state-box">
-        <div className="state-icon">📋</div>
+        <ClipboardList className="state-icon" size={28} strokeWidth={1.5} />
         <p className="state-text">Aplique filtros acima para visualizar os inadimplentes</p>
       </div>
     );
@@ -53,7 +65,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
   if (data.length === 0) {
     return (
       <div className="state-box">
-        <div className="state-icon">🔍</div>
+        <SearchX className="state-icon" size={28} strokeWidth={1.5} />
         <p className="state-text">Nenhuma inadimplência encontrada</p>
         <p className="state-subtext">Tente ajustar seus filtros ou buscar novamente</p>
       </div>
@@ -66,30 +78,30 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
         <span className="panel-table-title">Inadimplentes · Detalhamento ({data.length})</span>
       </div>
 
-      <div className="table-wrapper">
+      <div className="table-wrapper table-wrapper-draggable" ref={dragScrollRef}>
         <table className="table">
           <thead>
             <tr>
-              <th>CPF</th>
               <th>Nome</th>
-              <th>Projeto</th>
-              <th>Nº Projeto</th>
-              <th>Status</th>
-              <th>Período</th>
-              <th>Município</th>
+              <th>CPF</th>
+              <th>Nome do Projeto</th>
+              <th>Nº do Projeto</th>
+              <th>Executor</th>
+              <th>Município do Executor</th>
+              <th>Representante</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => {
+            {paginatedData.map((item) => {
               const isExpanded = expandedRows.has(item.id);
               const isCPFUnmasked = unmaskedCPFs.has(item.cpf);
               const displayCPF = isCPFUnmasked ? formatCPF(item.cpf) : maskCPF(item.cpf);
-              const statusClass = `badge badge-${item.statusInadimplencia}`;
 
               return (
                 <React.Fragment key={item.id}>
                   <tr>
+                    <td className="name-cell">{item.nome}</td>
                     <td className="cpf-cell">
                       <div className="cpf-flex">
                         <span>{displayCPF}</span>
@@ -102,17 +114,11 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
                         </button>
                       </div>
                     </td>
-                    <td className="name-cell">{item.nome}</td>
                     <td>{item.projeto}</td>
                     <td>{item.idProjeto}</td>
-                    <td>
-                      <span className={statusClass}>
-                        <span className="badge-dot" />
-                        {getStatusLabel(item.statusInadimplencia)}
-                      </span>
-                    </td>
-                    <td>{item.dataPeriodo}</td>
+                    <td>{item.executor}</td>
                     <td>{item.municipio}</td>
+                    <td>{item.representante}</td>
                     <td>
                       <button
                         className="icon-btn"
@@ -134,27 +140,13 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
                       <td colSpan={8}>
                         <div className="expanded-grid">
                           <div>
-                            <div className="expanded-label">CPF (Completo)</div>
-                            <div className="expanded-value">{formatCPF(item.cpf)}</div>
+                            <div className="expanded-label">Período de Referência</div>
+                            <div className="expanded-value">{item.dataPeriodo}</div>
                           </div>
                           <div>
                             <div className="expanded-label">Data de Registro</div>
                             <div className="expanded-value">{item.dataRegistro || 'N/A'}</div>
                           </div>
-                          {item.executor && (
-                            <div>
-                              <div className="expanded-label">Executor</div>
-                              <div className="expanded-value">{item.executor}</div>
-                            </div>
-                          )}
-                          {item.numeroProjetosRelacionados && (
-                            <div>
-                              <div className="expanded-label">Projetos Relacionados</div>
-                              <div className="expanded-value">
-                                {item.numeroProjetosRelacionados}
-                              </div>
-                            </div>
-                          )}
                         </div>
 
                         {historicoPorCpf?.has(item.cpf) && (
@@ -176,6 +168,17 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        page={page}
+        pageSize={pageSize}
+        totalItems={data.length}
+        onPageChange={setPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setPage(1);
+        }}
+      />
     </>
   );
 };

@@ -45,6 +45,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-01',
     municipio: 'NOVA LIMA',
     executor: 'Associação Artística Coral Ars Antiqua',
+    representante: 'Angela Regina Ferreira',
     dataRegistro: '2024-09-15',
   },
   {
@@ -58,6 +59,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-02',
     municipio: 'BELO HORIZONTE',
     executor: 'MODAS ETC E TAL LTDA.',
+    representante: 'Ronaldo Moreira Fraga',
     dataRegistro: '2024-10-20',
   },
   {
@@ -71,6 +73,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-01',
     municipio: 'PEDRO LEOPOLDO',
     executor: 'Lisandro Puntel Ruas',
+    representante: 'Lisandro Puntel Ruas',
     dataRegistro: '2024-08-10',
   },
   {
@@ -84,6 +87,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-03',
     municipio: 'PEDRO LEOPOLDO',
     executor: 'Lisandro Puntel Ruas',
+    representante: 'Lisandro Puntel Ruas',
     dataRegistro: '2024-11-05',
   },
   {
@@ -97,6 +101,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-02',
     municipio: 'UBERABA',
     executor: 'Neilane Daniele de Morais Almeida',
+    representante: 'Neilane Daniele de Morais Almeida',
     dataRegistro: '2024-09-28',
   },
   {
@@ -110,6 +115,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2024-12',
     municipio: 'BELO HORIZONTE',
     executor: 'Retinências Núcleo de Artes Cênicas',
+    representante: 'Marcus Vinícius Andrade',
     dataRegistro: '2024-07-22',
   },
   {
@@ -123,6 +129,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-01',
     municipio: 'NOVA LIMA',
     executor: 'Associação Artística Coral Ars Antiqua',
+    representante: 'Angela Regina Ferreira',
     dataRegistro: '2024-10-12',
   },
   {
@@ -136,6 +143,7 @@ export const mockInadimplentes: Inadimplente[] = [
     dataPeriodo: '2025-01',
     municipio: 'PEDRO LEOPOLDO',
     executor: 'Lisandro Puntel Ruas',
+    representante: 'Lisandro Puntel Ruas',
     dataRegistro: '2024-09-08',
   },
 ];

@@ -8,7 +8,8 @@ export interface Inadimplente {
   statusInadimplencia: 'ativo' | 'resolvido' | 'pendente' | 'cancelado';
   dataPeriodo: string;
   municipio: string;
-  executor?: string;
+  executor: string;
+  representante: string;
   dataRegistro?: string;
 }
 
