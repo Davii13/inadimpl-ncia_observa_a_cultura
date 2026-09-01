@@ -4,7 +4,6 @@ import { Inadimplente, HistoricoCPF } from '../types';
 import { maskCPF, formatCPF } from '../utils/formatters';
 import { HistoricoCPFTimeline } from './HistoricoCPFTimeline';
 import { Pagination } from './Pagination';
-import { useDragScroll } from '../hooks/useDragScroll';
 
 interface ResultsTableProps {
   data: Inadimplente[];
@@ -23,7 +22,6 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
   const [unmaskedCPFs, setUnmaskedCPFs] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const dragScrollRef = useDragScroll<HTMLDivElement>();
 
   useEffect(() => {
     setPage(1);
@@ -78,7 +76,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
         <span className="panel-table-title">Inadimplentes · Detalhamento ({data.length})</span>
       </div>
 
-      <div className="table-wrapper table-wrapper-draggable" ref={dragScrollRef}>
+      <div className="table-wrapper">
         <table className="table">
           <thead>
             <tr>

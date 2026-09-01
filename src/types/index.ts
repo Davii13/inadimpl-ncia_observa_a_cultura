@@ -29,11 +29,20 @@ export type TipoAlteracao =
   | 'novo_no_sistema'
   | 'ausente_no_periodo';
 
+export type PeriodoRapido = 'tudo' | '7dias' | '30dias' | '90dias' | '1ano';
+export type SituacaoDMPCFiltro = SituacaoDMPC | 'todos';
+
 export interface FiltrosInadimplencia {
+  busca: string;
   cpf: string;
   projetoId: string;
   dataInicial: string;
   dataFinal: string;
+  periodoRapido: PeriodoRapido;
+  situacao: SituacaoDMPCFiltro;
+  municipio: string;
+  edital: string;
+  statusInadimplencia: string;
   alteracao?: TipoAlteracao | 'todos';
 }
 

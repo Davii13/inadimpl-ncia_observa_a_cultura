@@ -463,6 +463,10 @@ a {
   padding-top: 4px;
 }
 
+.panel-body-sections .field-actions {
+  padding: 16px 20px 20px;
+}
+
 .field-actions .btn {
   flex: 1;
 }
@@ -478,22 +482,108 @@ a {
   min-width: 320px;
 }
 
+/* ===== COLLAPSIBLE FILTER SECTIONS ===== */
+.panel-body-sections {
+  padding: 0;
+  gap: 0;
+}
+
+.filter-section {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.filter-section:last-of-type {
+  border-bottom: none;
+}
+
+.filter-section-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.filter-section-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.filter-section-body {
+  padding: 4px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== CHIPS ===== */
+.chip-row-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.chip-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip-group-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--accent-solid);
+  color: var(--text-primary);
+}
+
+.chip.active {
+  background: var(--accent-soft-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ===== TABLE ===== */
 .table-wrapper {
   overflow-x: auto;
+  scrollbar-gutter: stable;
 }
 
-.table-wrapper-draggable {
-  cursor: grab;
-  user-select: none;
-}
-
-.table-wrapper-draggable.dragging {
-  cursor: grabbing;
-}
-
-.table-wrapper-draggable.dragging * {
-  pointer-events: none;
+.table-wrapper::-webkit-scrollbar {
+  height: 10px;
 }
 
 .table {

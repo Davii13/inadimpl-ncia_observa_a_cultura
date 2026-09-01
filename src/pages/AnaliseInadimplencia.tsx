@@ -20,11 +20,25 @@ import {
 } from '../data/dmpcMockData';
 
 const emptyFiltros: FiltrosInadimplencia = {
+  busca: '',
   cpf: '',
   projetoId: '',
   dataInicial: '',
   dataFinal: '',
+  periodoRapido: 'tudo',
+  situacao: 'todos',
+  municipio: '',
+  edital: '',
+  statusInadimplencia: '',
   alteracao: 'todos',
+};
+
+const periodoRapidoParaIntervalo = (periodoRapido: FiltrosInadimplencia['periodoRapido']) => {
+  if (periodoRapido === 'tudo') return null;
+  const dias: Record<string, number> = { '7dias': 7, '30dias': 30, '90dias': 90, '1ano': 365 };
+  const inicio = new Date();
+  inicio.setDate(inicio.getDate() - dias[periodoRapido]);
+  return inicio;
 };
 
 export const AnaliseInadimplencia: React.FC = () => {
@@ -59,13 +73,29 @@ export const AnaliseInadimplencia: React.FC = () => {
     setTimeout(() => {
       let filtered = [...mockInadimplentes];
 
-      if (filtros.cpf) {
-        const cpfClean = filtros.cpf.replace(/\D/g, '');
-        filtered = filtered.filter((item) => item.cpf.replace(/\D/g, '').includes(cpfClean));
+      if (filtros.busca) {
+        const buscaClean = filtros.busca.replace(/\D/g, '');
+        const buscaLower = filtros.busca.toLowerCase();
+        filtered = filtered.filter((item) => {
+          const cpfMatch = buscaClean.length > 0 && item.cpf.replace(/\D/g, '').includes(buscaClean);
+          const nomeMatch = item.nome.toLowerCase().includes(buscaLower);
+          const projetoMatch = item.idProjeto.toLowerCase().includes(buscaLower);
+          return cpfMatch || nomeMatch || projetoMatch;
+        });
       }
 
       if (filtros.projetoId) {
         filtered = filtered.filter((item) => item.idProjeto === filtros.projetoId);
+      }
+
+      if (filtros.municipio) {
+        filtered = filtered.filter((item) => item.municipio === filtros.municipio);
+      }
+
+      if (filtros.statusInadimplencia) {
+        filtered = filtered.filter(
+          (item) => item.statusInadimplencia === filtros.statusInadimplencia
+        );
       }
 
       if (filtros.dataInicial && filtros.dataFinal) {
@@ -75,6 +105,23 @@ export const AnaliseInadimplencia: React.FC = () => {
         filtered = filtered.filter((item) => {
           const itemDate = new Date(`${item.dataPeriodo}-01`);
           return itemDate >= inicio && itemDate <= fim;
+        });
+      }
+
+      const inicioRapido = periodoRapidoParaIntervalo(filtros.periodoRapido);
+      if (inicioRapido) {
+        filtered = filtered.filter((item) => {
+          const itemDate = new Date(`${item.dataPeriodo}-01`);
+          return itemDate >= inicioRapido;
+        });
+      }
+
+      if (filtros.situacao !== 'todos') {
+        filtered = filtered.filter((item) => {
+          const historico = historicoPorCpf.get(item.cpf);
+          if (!historico || historico.situacoes.length === 0) return false;
+          const atual = historico.situacoes[historico.situacoes.length - 1];
+          return atual.situacao === filtros.situacao;
         });
       }
 
@@ -106,10 +153,15 @@ export const AnaliseInadimplencia: React.FC = () => {
       setHasSearched(true);
       setFiltroAtivo(
         !!(
-          filtros.cpf ||
+          filtros.busca ||
           filtros.projetoId ||
+          filtros.municipio ||
+          filtros.edital ||
+          filtros.statusInadimplencia ||
           filtros.dataInicial ||
           filtros.dataFinal ||
+          filtros.periodoRapido !== 'tudo' ||
+          filtros.situacao !== 'todos' ||
           (filtros.alteracao && filtros.alteracao !== 'todos')
         )
       );

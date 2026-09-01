@@ -33,6 +33,19 @@ export const mockProjetos: ProjetoOption[] = [
   },
 ];
 
+export const mockMunicipios: string[] = [
+  'NOVA LIMA',
+  'BELO HORIZONTE',
+  'PEDRO LEOPOLDO',
+  'UBERABA',
+];
+
+export const mockEditais: string[] = [
+  'Edital FEC 2024',
+  'Edital LEIC 2024',
+  'Edital FEC 2025',
+];
+
 export const mockInadimplentes: Inadimplente[] = [
   {
     id: '1',
