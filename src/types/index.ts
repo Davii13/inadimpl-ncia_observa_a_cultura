@@ -1,3 +1,5 @@
+export type Mecanismo = 'FEC' | 'LEIC';
+
 export interface Inadimplente {
   id: string;
   cpf: string;
@@ -5,6 +7,7 @@ export interface Inadimplente {
   projeto: string;
   numeroProjetosRelacionados?: number;
   idProjeto: string;
+  mecanismo: Mecanismo;
   statusInadimplencia: 'ativo' | 'resolvido' | 'pendente' | 'cancelado';
   dataPeriodo: string;
   municipio: string;
@@ -43,6 +46,7 @@ export interface FiltrosInadimplencia {
   municipio: string;
   edital: string;
   statusInadimplencia: string;
+  mecanismo: Mecanismo | '';
   alteracao?: TipoAlteracao | 'todos';
 }
 

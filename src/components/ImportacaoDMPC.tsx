@@ -1,18 +1,26 @@
 import React, { useState, useRef } from 'react';
 import { Upload, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import { ImportacaoDMPC as ImportacaoDMPCType, RegistroDMPC, ComparativoImportacao } from '../types';
+import {
+  ImportacaoDMPC as ImportacaoDMPCType,
+  RegistroDMPC,
+  ComparativoImportacao,
+  DetalheAlteracaoCPF,
+} from '../types';
 import { parseCSVDMPC } from '../utils/csvParser';
 import { compararPeriodos } from '../utils/dmpcComparator';
 import { formatPeriodo } from '../utils/formatters';
 import { ResumoProcessamento } from './ResumoProcessamento';
+import { DetalheImportacaoModal } from './DetalheImportacaoModal';
 
 interface ImportacaoDMPCProps {
   importacoes: ImportacaoDMPCType[];
   registrosPorImportacao: Record<string, RegistroDMPC[]>;
+  detalhesPorImportacao: Record<string, DetalheAlteracaoCPF[]>;
   onImportComplete: (
     importacao: ImportacaoDMPCType,
     registros: RegistroDMPC[],
-    comparativo: ComparativoImportacao
+    comparativo: ComparativoImportacao,
+    detalhes: DetalheAlteracaoCPF[]
   ) => void;
 }
 
@@ -30,6 +38,7 @@ const gerarOpcoesPeriodo = (): { value: string; label: string }[] => {
 export const ImportacaoDMPC: React.FC<ImportacaoDMPCProps> = ({
   importacoes,
   registrosPorImportacao,
+  detalhesPorImportacao,
   onImportComplete,
 }) => {
   const [arquivo, setArquivo] = useState<File | null>(null);
@@ -100,7 +109,7 @@ export const ImportacaoDMPC: React.FC<ImportacaoDMPCProps> = ({
         ? registrosPorImportacao[`imp-${periodoAnterior}`] ?? null
         : null;
 
-      const { comparativo } = compararPeriodos(
+      const { comparativo, detalhes } = compararPeriodos(
         registros,
         registrosAnteriores,
         importacaoId,
@@ -122,7 +131,7 @@ export const ImportacaoDMPC: React.FC<ImportacaoDMPCProps> = ({
         linhasInvalidas: invalidas,
       };
 
-      onImportComplete(novaImportacao, registros, comparativo);
+      onImportComplete(novaImportacao, registros, comparativo, detalhes);
       setUltimoComparativo(comparativo);
       setArquivo(null);
       setPeriodo('');
@@ -199,12 +208,16 @@ export const ImportacaoDMPC: React.FC<ImportacaoDMPCProps> = ({
 
       {ultimoComparativo && <ResumoProcessamento comparativo={ultimoComparativo} />}
 
-      <HistoricoImportacoes importacoes={importacoes} />
+      <HistoricoImportacoes importacoes={importacoes} detalhesPorImportacao={detalhesPorImportacao} />
     </div>
   );
 };
 
-const HistoricoImportacoes: React.FC<{ importacoes: ImportacaoDMPCType[] }> = ({ importacoes }) => {
+const HistoricoImportacoes: React.FC<{
+  importacoes: ImportacaoDMPCType[];
+  detalhesPorImportacao: Record<string, DetalheAlteracaoCPF[]>;
+}> = ({ importacoes, detalhesPorImportacao }) => {
+  const [detalheAberto, setDetalheAberto] = useState<ImportacaoDMPCType | null>(null);
   const ordenadas = [...importacoes].sort((a, b) => b.periodo.localeCompare(a.periodo));
 
   if (ordenadas.length === 0) {
@@ -232,6 +245,7 @@ const HistoricoImportacoes: React.FC<{ importacoes: ImportacaoDMPCType[] }> = ({
               <th>Data da Importação</th>
               <th>Registros</th>
               <th>Situação</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -254,11 +268,28 @@ const HistoricoImportacoes: React.FC<{ importacoes: ImportacaoDMPCType[] }> = ({
                     {imp.status === 'processado' ? 'Processado' : imp.status}
                   </span>
                 </td>
+                <td>
+                  <button
+                    className="btn btn-small"
+                    onClick={() => setDetalheAberto(imp)}
+                    disabled={!detalhesPorImportacao[imp.id]?.length}
+                  >
+                    Ver detalhes
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {detalheAberto && (
+        <DetalheImportacaoModal
+          importacao={detalheAberto}
+          detalhes={detalhesPorImportacao[detalheAberto.id] ?? []}
+          onClose={() => setDetalheAberto(null)}
+        />
+      )}
     </div>
   );
 };

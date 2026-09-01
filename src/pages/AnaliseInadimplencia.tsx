@@ -10,6 +10,7 @@ import {
   ImportacaoDMPC as ImportacaoDMPCType,
   RegistroDMPC,
   ComparativoImportacao,
+  DetalheAlteracaoCPF,
   HistoricoCPF,
 } from '../types';
 import { mockProjetos, mockInadimplentes } from '../data/mockData';
@@ -18,6 +19,7 @@ import {
   mockRegistrosPorImportacao,
   construirHistoricoCPF,
 } from '../data/dmpcMockData';
+import { compararPeriodos } from '../utils/dmpcComparator';
 
 const emptyFiltros: FiltrosInadimplencia = {
   busca: '',
@@ -30,6 +32,7 @@ const emptyFiltros: FiltrosInadimplencia = {
   municipio: '',
   edital: '',
   statusInadimplencia: '',
+  mecanismo: '',
   alteracao: 'todos',
 };
 
@@ -54,6 +57,9 @@ export const AnaliseInadimplencia: React.FC = () => {
   const [registrosPorImportacao, setRegistrosPorImportacao] = useState<
     Record<string, RegistroDMPC[]>
   >(mockRegistrosPorImportacao);
+  const [detalhesPorImportacao, setDetalhesPorImportacao] = useState<
+    Record<string, DetalheAlteracaoCPF[]>
+  >(() => calcularDetalhesIniciais(mockImportacoes, mockRegistrosPorImportacao));
 
   const historicoCPFList = useMemo<HistoricoCPF[]>(
     () => construirHistoricoCPFCompleto(registrosPorImportacao),
@@ -96,6 +102,10 @@ export const AnaliseInadimplencia: React.FC = () => {
         filtered = filtered.filter(
           (item) => item.statusInadimplencia === filtros.statusInadimplencia
         );
+      }
+
+      if (filtros.mecanismo) {
+        filtered = filtered.filter((item) => item.mecanismo === filtros.mecanismo);
       }
 
       if (filtros.dataInicial && filtros.dataFinal) {
@@ -158,6 +168,7 @@ export const AnaliseInadimplencia: React.FC = () => {
           filtros.municipio ||
           filtros.edital ||
           filtros.statusInadimplencia ||
+          filtros.mecanismo ||
           filtros.dataInicial ||
           filtros.dataFinal ||
           filtros.periodoRapido !== 'tudo' ||
@@ -186,11 +197,13 @@ export const AnaliseInadimplencia: React.FC = () => {
   const handleImportComplete = (
     novaImportacao: ImportacaoDMPCType,
     registros: RegistroDMPC[],
-    comparativo: ComparativoImportacao
+    comparativo: ComparativoImportacao,
+    detalhes: DetalheAlteracaoCPF[]
   ) => {
     void comparativo;
     setImportacoes((prev) => [...prev, novaImportacao]);
     setRegistrosPorImportacao((prev) => ({ ...prev, [novaImportacao.id]: registros }));
+    setDetalhesPorImportacao((prev) => ({ ...prev, [novaImportacao.id]: detalhes }));
   };
 
   return (
@@ -211,7 +224,7 @@ export const AnaliseInadimplencia: React.FC = () => {
           </button>
           <button className="btn" onClick={() => setIsImportModalOpen(true)}>
             <UploadCloud size={15} />
-            Importar DMPC
+            Dados DMPC
           </button>
           <button className="btn" onClick={handleClearFilters} disabled={!filtroAtivo}>
             <X size={15} />
@@ -241,6 +254,7 @@ export const AnaliseInadimplencia: React.FC = () => {
           <ImportacaoDMPC
             importacoes={importacoes}
             registrosPorImportacao={registrosPorImportacao}
+            detalhesPorImportacao={detalhesPorImportacao}
             onImportComplete={handleImportComplete}
           />
         </Modal>
@@ -276,4 +290,35 @@ function construirHistoricoCPFCompleto(
   });
 
   return Array.from(porCpf.values());
+}
+
+/**
+ * Recalcula os detalhes por CPF (quem continua/deixou/tornou-se inadimplente) para as
+ * importações mockup iniciais, já que os dados de exemplo só trazem o comparativo agregado.
+ * Assume que `importacoesIniciais` está ordenada cronologicamente por período.
+ */
+function calcularDetalhesIniciais(
+  importacoesIniciais: ImportacaoDMPCType[],
+  registrosPorImportacao: Record<string, RegistroDMPC[]>
+): Record<string, DetalheAlteracaoCPF[]> {
+  const ordenadas = [...importacoesIniciais].sort((a, b) => a.periodo.localeCompare(b.periodo));
+  const resultado: Record<string, DetalheAlteracaoCPF[]> = {};
+
+  ordenadas.forEach((imp, index) => {
+    const anterior = ordenadas[index - 1];
+    const registrosAtual = registrosPorImportacao[imp.id] ?? [];
+    const registrosAnteriores = anterior ? registrosPorImportacao[anterior.id] ?? null : null;
+
+    const { detalhes } = compararPeriodos(
+      registrosAtual,
+      registrosAnteriores,
+      imp.id,
+      imp.periodo,
+      anterior?.periodo ?? null
+    );
+
+    resultado[imp.id] = detalhes;
+  });
+
+  return resultado;
 }

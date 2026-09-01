@@ -139,7 +139,10 @@ a {
   border-right: 1px solid var(--border-soft);
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar-brand {
@@ -715,6 +718,12 @@ a {
   background: var(--text-muted);
 }
 
+.badge-mecanismo-fec,
+.badge-mecanismo-leic {
+  background: var(--badge-neutral-bg);
+  color: var(--badge-neutral-text);
+}
+
 /* ===== EXPANDED ROW ===== */
 .expanded-row td {
   background: var(--bg-input);
@@ -1087,7 +1096,7 @@ a {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 48px 20px;
+  padding: 32px 20px;
   z-index: 100;
   overflow-y: auto;
 }
@@ -1097,8 +1106,8 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   width: 100%;
-  max-width: 880px;
-  max-height: calc(100vh - 96px);
+  max-width: 1180px;
+  max-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow);
@@ -1140,6 +1149,56 @@ a {
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12.5px;
+}
+
+/* ===== DETALHE IMPORTAÇÃO MODAL ===== */
+.detalhe-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dmpc-search-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+.dmpc-search-input svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.dmpc-search-input .input {
+  border: none;
+  padding: 10px 0;
+  background: transparent;
+}
+
+.dmpc-search-input .input:focus {
+  box-shadow: none;
+}
+
+.detalhe-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+}
+
+.detalhe-table-wrapper .table thead tr {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 /* ===== PAGINATION ===== */

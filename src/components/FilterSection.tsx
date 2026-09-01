@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
-import { FiltrosInadimplencia, ProjetoOption, PeriodoRapido, SituacaoDMPCFiltro } from '../types';
+import { FiltrosInadimplencia, ProjetoOption, PeriodoRapido, SituacaoDMPCFiltro, Mecanismo } from '../types';
 import { validateCPF, formatCPF } from '../utils/formatters';
 import { mockMunicipios, mockEditais } from '../data/mockData';
 
@@ -21,6 +21,7 @@ const defaultFiltros: FiltrosInadimplencia = {
   municipio: '',
   edital: '',
   statusInadimplencia: '',
+  mecanismo: '',
   alteracao: 'todos',
 };
 
@@ -36,6 +37,12 @@ const situacaoOptions: { value: SituacaoDMPCFiltro; label: string }[] = [
   { value: 'todos', label: 'Todos' },
   { value: 'inadimplente', label: 'Inadimplente' },
   { value: 'regular', label: 'Regular' },
+];
+
+const mecanismoOptions: { value: Mecanismo | ''; label: string }[] = [
+  { value: '', label: 'Todos' },
+  { value: 'FEC', label: 'FEC' },
+  { value: 'LEIC', label: 'LEIC' },
 ];
 
 interface CollapsibleSectionProps {
@@ -162,6 +169,22 @@ export const FilterSection: React.FC<FilterSectionProps> = ({ projetos, onSearch
                       type="button"
                       className={`chip${filtros.situacao === op.value ? ' active' : ''}`}
                       onClick={() => patch({ situacao: op.value })}
+                    >
+                      {op.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="chip-group">
+                <span className="chip-group-label">Mecanismo:</span>
+                <div className="chip-row">
+                  {mecanismoOptions.map((op) => (
+                    <button
+                      key={op.value || 'todos'}
+                      type="button"
+                      className={`chip${filtros.mecanismo === op.value ? ' active' : ''}`}
+                      onClick={() => patch({ mecanismo: op.value })}
                     >
                       {op.label}
                     </button>

@@ -1,22 +1,45 @@
-import { RegistroDMPC, ImportacaoDMPC, HistoricoCPF } from '../types';
+import { RegistroDMPC, ImportacaoDMPC, HistoricoCPF, SituacaoDMPC } from '../types';
+import { mockInadimplentes } from './mockData';
 
-export const mockRegistrosAgosto2026: RegistroDMPC[] = [
-  { cpf: '12345678900', nome: 'João Silva Santos', situacao: 'inadimplente', periodo: '2026-08', projeto: 'Mojubá - Raízes da Música Brasileira', idProjeto: '2024.3805.30455', municipio: 'NOVA LIMA', linhaOrigem: 2 },
-  { cpf: '45612378945', nome: 'Carlos Lima Oliveira', situacao: 'inadimplente', periodo: '2026-08', projeto: 'Festival Sumidouro em Cena - 7ª Edição', idProjeto: '2024.3809.30453', municipio: 'PEDRO LEOPOLDO', linhaOrigem: 3 },
-  { cpf: '11122233344', nome: 'Ana Paula Ferreira', situacao: 'inadimplente', periodo: '2026-08', projeto: 'Festival Sumidouro em Cena - 7ª Edição', idProjeto: '2024.3809.30452', municipio: 'PEDRO LEOPOLDO', linhaOrigem: 4 },
-  { cpf: '55566677788', nome: 'Ricardo Mendes Gomes', situacao: 'regular', periodo: '2026-08', projeto: 'Minas Plus Fashion 2027', idProjeto: '2024.3807.0061', municipio: 'UBERABA', linhaOrigem: 5 },
-  { cpf: '99988877766', nome: 'Fernanda Rocha Dias', situacao: 'inadimplente', periodo: '2026-08', projeto: 'Circulação dos Espetáculos do Retinências Produção', idProjeto: '2024.3805.30458', municipio: 'BELO HORIZONTE', linhaOrigem: 6 },
-  { cpf: '33344455566', nome: 'Juliana Costa Mendes', situacao: 'inadimplente', periodo: '2026-08', projeto: 'Mojubá - Raízes da Música Brasileira', idProjeto: '2024.3805.30455', municipio: 'NOVA LIMA', linhaOrigem: 7 },
-];
+/**
+ * Deriva as planilhas DMPC mockup a partir da base de inadimplentes, garantindo que
+ * CPF/nome/projeto sempre estejam alinhados entre a tabela principal e o histórico DMPC
+ * (evita o bug de CPFs desencontrados entre as duas fontes de dados mockup).
+ */
+const situacaoAgosto = (index: number): SituacaoDMPC => (index % 5 === 0 ? 'regular' : 'inadimplente');
 
-export const mockRegistrosSetembro2026: RegistroDMPC[] = [
-  { cpf: '12345678900', nome: 'João Silva Santos', situacao: 'inadimplente', periodo: '2026-09', projeto: 'Mojubá - Raízes da Música Brasileira', idProjeto: '2024.3805.30455', municipio: 'NOVA LIMA', linhaOrigem: 2 },
-  { cpf: '11122233344', nome: 'Ana Paula Ferreira', situacao: 'regular', periodo: '2026-09', projeto: 'Festival Sumidouro em Cena - 7ª Edição', idProjeto: '2024.3809.30452', municipio: 'PEDRO LEOPOLDO', linhaOrigem: 3 },
-  { cpf: '55566677788', nome: 'Ricardo Mendes Gomes', situacao: 'inadimplente', periodo: '2026-09', projeto: 'Minas Plus Fashion 2027', idProjeto: '2024.3807.0061', municipio: 'UBERABA', linhaOrigem: 4 },
-  { cpf: '99988877766', nome: 'Fernanda Rocha Dias', situacao: 'inadimplente', periodo: '2026-09', projeto: 'Circulação dos Espetáculos do Retinências Produção', idProjeto: '2024.3805.30458', municipio: 'BELO HORIZONTE', linhaOrigem: 5 },
-  { cpf: '33344455566', nome: 'Juliana Costa Mendes', situacao: 'regular', periodo: '2026-09', projeto: 'Mojubá - Raízes da Música Brasileira', idProjeto: '2024.3805.30455', municipio: 'NOVA LIMA', linhaOrigem: 6 },
-  { cpf: '77788899900', nome: 'Bruno Xavier Silva', situacao: 'inadimplente', periodo: '2026-09', projeto: 'Festival Sumidouro em Cena - 7ª Edição', idProjeto: '2024.3809.30453', municipio: 'PEDRO LEOPOLDO', linhaOrigem: 7 },
-];
+/** Evolui a situação de agosto para setembro seguindo um padrão cíclico plausível. */
+const situacaoSetembro = (index: number, agosto: SituacaoDMPC): SituacaoDMPC => {
+  const ciclo = index % 4;
+  if (agosto === 'inadimplente') {
+    // 1 em cada 4 inadimplentes de agosto regulariza em setembro.
+    return ciclo === 3 ? 'regular' : 'inadimplente';
+  }
+  // 1 em cada 4 regulares de agosto torna-se inadimplente em setembro.
+  return ciclo === 1 ? 'inadimplente' : 'regular';
+};
+
+export const mockRegistrosAgosto2026: RegistroDMPC[] = mockInadimplentes.map((item, index) => ({
+  cpf: item.cpf,
+  nome: item.nome,
+  situacao: situacaoAgosto(index),
+  periodo: '2026-08',
+  projeto: item.projeto,
+  idProjeto: item.idProjeto,
+  municipio: item.municipio,
+  linhaOrigem: index + 2,
+}));
+
+export const mockRegistrosSetembro2026: RegistroDMPC[] = mockInadimplentes.map((item, index) => ({
+  cpf: item.cpf,
+  nome: item.nome,
+  situacao: situacaoSetembro(index, situacaoAgosto(index)),
+  periodo: '2026-09',
+  projeto: item.projeto,
+  idProjeto: item.idProjeto,
+  municipio: item.municipio,
+  linhaOrigem: index + 2,
+}));
 
 export const mockImportacoes: ImportacaoDMPC[] = [
   {
@@ -24,8 +47,8 @@ export const mockImportacoes: ImportacaoDMPC[] = [
     periodo: '2026-08',
     nomeArquivo: 'DMPC_08_2026.csv',
     dataImportacao: '2026-09-01T10:15:00Z',
-    totalRegistros: 6,
-    registrosValidos: 6,
+    totalRegistros: mockRegistrosAgosto2026.length,
+    registrosValidos: mockRegistrosAgosto2026.length,
     registrosInvalidos: 0,
     duplicadosNaPlanilha: 0,
     status: 'processado',
@@ -37,8 +60,8 @@ export const mockImportacoes: ImportacaoDMPC[] = [
     periodo: '2026-09',
     nomeArquivo: 'DMPC_09_2026.csv',
     dataImportacao: '2026-10-01T09:40:00Z',
-    totalRegistros: 6,
-    registrosValidos: 6,
+    totalRegistros: mockRegistrosSetembro2026.length,
+    registrosValidos: mockRegistrosSetembro2026.length,
     registrosInvalidos: 0,
     duplicadosNaPlanilha: 0,
     status: 'processado',

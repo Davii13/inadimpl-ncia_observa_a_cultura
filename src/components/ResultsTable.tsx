@@ -82,8 +82,10 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
             <tr>
               <th>Nome</th>
               <th>CPF</th>
+              <th>Situação Atual</th>
               <th>Nome do Projeto</th>
               <th>Nº do Projeto</th>
+              <th>Mecanismo</th>
               <th>Executor</th>
               <th>Município do Executor</th>
               <th>Representante</th>
@@ -95,6 +97,16 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
               const isExpanded = expandedRows.has(item.id);
               const isCPFUnmasked = unmaskedCPFs.has(item.cpf);
               const displayCPF = isCPFUnmasked ? formatCPF(item.cpf) : maskCPF(item.cpf);
+              const historico = historicoPorCpf?.get(item.cpf);
+              const situacaoDMPC =
+                historico && historico.situacoes.length > 0
+                  ? historico.situacoes[historico.situacoes.length - 1].situacao
+                  : null;
+              const situacaoAtual =
+                situacaoDMPC ??
+                (item.statusInadimplencia === 'ativo' || item.statusInadimplencia === 'pendente'
+                  ? 'inadimplente'
+                  : 'regular');
 
               return (
                 <React.Fragment key={item.id}>
@@ -112,8 +124,22 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
                         </button>
                       </div>
                     </td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          situacaoAtual === 'inadimplente' ? 'badge-ativo' : 'badge-resolvido'
+                        }`}
+                      >
+                        {situacaoAtual === 'inadimplente' ? 'Inadimplente' : 'Adimplente'}
+                      </span>
+                    </td>
                     <td>{item.projeto}</td>
                     <td>{item.idProjeto}</td>
+                    <td>
+                      <span className={`badge badge-mecanismo-${item.mecanismo.toLowerCase()}`}>
+                        {item.mecanismo}
+                      </span>
+                    </td>
                     <td>{item.executor}</td>
                     <td>{item.municipio}</td>
                     <td>{item.representante}</td>
@@ -135,10 +161,10 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
                   </tr>
                   {isExpanded && (
                     <tr className="expanded-row">
-                      <td colSpan={8}>
+                      <td colSpan={10}>
                         <div className="expanded-grid">
                           <div>
-                            <div className="expanded-label">Período de Referência</div>
+                            <div className="expanded-label">Período do Registro Inicial</div>
                             <div className="expanded-value">{item.dataPeriodo}</div>
                           </div>
                           <div>
