@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Eye, EyeOff, ChevronDown, ClipboardList, SearchX } from 'lucide-react';
+import { Eye, EyeOff, ChevronDown, ClipboardList, SearchX, FileText } from 'lucide-react';
 import { Inadimplente, HistoricoCPF } from '../types';
-import { maskCPF, formatCPF } from '../utils/formatters';
+import { maskCPF, formatCPF, formatDate } from '../utils/formatters';
 import { HistoricoCPFTimeline } from './HistoricoCPFTimeline';
 import { Pagination } from './Pagination';
 
@@ -76,7 +76,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
         <span className="panel-table-title">Inadimplentes · Detalhamento ({data.length})</span>
       </div>
 
-      <div className="table-wrapper">
+      <div className="table-wrapper table-wrapper-scrollable">
         <table className="table">
           <thead>
             <tr>
@@ -170,6 +170,37 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({
                           <div>
                             <div className="expanded-label">Data de Registro</div>
                             <div className="expanded-value">{item.dataRegistro || 'N/A'}</div>
+                          </div>
+                          <div>
+                            <div className="expanded-label">Status do Projeto</div>
+                            <div className="expanded-value">
+                              <span className="badge badge-cancelado">{item.statusProjeto}</span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="expanded-label">Prazo de Execução</div>
+                            <div className="expanded-value">
+                              {formatDate(item.prazoExecucao.inicio)} até{' '}
+                              {formatDate(item.prazoExecucao.fim)}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="expanded-label">Documento de Comprovação</div>
+                            <div className="expanded-value">
+                              {item.documentoComprovacao ? (
+                                <a
+                                  href={item.documentoComprovacao.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="doc-link"
+                                >
+                                  <FileText size={14} />
+                                  {item.documentoComprovacao.nomeArquivo}
+                                </a>
+                              ) : (
+                                <span className="state-subtext">Nenhum documento anexado</span>
+                              )}
+                            </div>
                           </div>
                         </div>
 

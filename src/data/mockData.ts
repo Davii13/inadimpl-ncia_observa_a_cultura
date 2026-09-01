@@ -1,4 +1,4 @@
-import { Inadimplente, ProjetoOption } from '../types';
+import { Inadimplente, ProjetoOption, STATUS_PROJETO_OPTIONS } from '../types';
 
 export const mockProjetos: ProjetoOption[] = [
   {
@@ -137,10 +137,21 @@ const datasRegistro = [
   '2024-11-05',
 ];
 
+const prazosExecucao: { inicio: string; fim: string }[] = [
+  { inicio: '2025-01-15', fim: '2025-06-30' },
+  { inicio: '2025-02-01', fim: '2025-07-15' },
+  { inicio: '2025-03-10', fim: '2025-08-31' },
+  { inicio: '2025-04-01', fim: '2025-09-30' },
+  { inicio: '2025-05-05', fim: '2025-10-15' },
+  { inicio: '2025-06-01', fim: '2025-11-30' },
+];
+
 export const mockInadimplentes: Inadimplente[] = nomesBase.map((nome, index) => {
   const projeto = mockProjetos[index % mockProjetos.length];
   const executorInfo = executoresBase[index % executoresBase.length];
   const municipio = mockMunicipios[index % mockMunicipios.length];
+  const statusInadimplencia = statusCiclo[index % statusCiclo.length];
+  const estaInadimplente = statusInadimplencia === 'ativo' || statusInadimplencia === 'pendente';
 
   return {
     id: String(index + 1),
@@ -150,7 +161,16 @@ export const mockInadimplentes: Inadimplente[] = nomesBase.map((nome, index) => 
     numeroProjetosRelacionados: (index % 3) + 1,
     idProjeto: projeto.id,
     mecanismo: index % 2 === 0 ? 'FEC' : 'LEIC',
-    statusInadimplencia: statusCiclo[index % statusCiclo.length],
+    statusInadimplencia,
+    statusProjeto: STATUS_PROJETO_OPTIONS[index % STATUS_PROJETO_OPTIONS.length],
+    prazoExecucao: prazosExecucao[index % prazosExecucao.length],
+    documentoComprovacao: estaInadimplente
+      ? {
+          nomeArquivo: `Notificacao_Inadimplencia_${projeto.numero}.pdf`,
+          url: '#',
+          dataUpload: datasRegistro[index % datasRegistro.length],
+        }
+      : undefined,
     dataPeriodo: periodosRegistro[index % periodosRegistro.length],
     municipio,
     executor: executorInfo.executor,

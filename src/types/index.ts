@@ -1,5 +1,56 @@
 export type Mecanismo = 'FEC' | 'LEIC';
 
+export const STATUS_PROJETO_OPTIONS = [
+  'Agendado',
+  'Agendado [Em captação]',
+  'Ajuste a ser feito pela Equipe Técnica - Projeto em execução',
+  'Aprovado',
+  'Aprovado não classificado',
+  'CA Prorrogação Assinada',
+  'Certidão de Aprovação assinada',
+  'Declaração de Incentivo Homologada',
+  'Desistência do Executor',
+  'Diligência Readequação',
+  'Emitir Certificado',
+  'Fato relevante [Em captação]',
+  'Fato relevante [Em execução]',
+  'Fato relevante [Encerrado]',
+  'Fato relevante [Expirado]',
+  'Fato relevante [Indeferidos]',
+  'Inadimplente',
+  'Indeferido',
+  'Início Cadastro',
+  'Nova Readequação Aprovada',
+  'Prazo de Captação Expirado',
+  'Prazo de Captação Prorrogado',
+  'Prazo de execução encerrado',
+  'Protocolo',
+  'Readequação Aprovada',
+  'Readequação em tramitação',
+  'Readequação Reprovada',
+  'Reajuste Reprovado',
+  'Recurso Deferido - Projeto Aprovado',
+  'Recurso Deferido - Projeto Não Aprovado',
+  'Recurso indeferido',
+  'Recurso rejeitado',
+  'Regularmente Inscrito',
+  'Rejeitado/Arquivado',
+  'Retorno 1ª Diligência Técnica',
+] as const;
+
+export type StatusProjeto = (typeof STATUS_PROJETO_OPTIONS)[number];
+
+export interface DocumentoComprovacao {
+  nomeArquivo: string;
+  url: string;
+  dataUpload: string;
+}
+
+export interface PrazoExecucao {
+  inicio: string;
+  fim: string;
+}
+
 export interface Inadimplente {
   id: string;
   cpf: string;
@@ -9,6 +60,9 @@ export interface Inadimplente {
   idProjeto: string;
   mecanismo: Mecanismo;
   statusInadimplencia: 'ativo' | 'resolvido' | 'pendente' | 'cancelado';
+  statusProjeto: StatusProjeto;
+  prazoExecucao: PrazoExecucao;
+  documentoComprovacao?: DocumentoComprovacao;
   dataPeriodo: string;
   municipio: string;
   executor: string;
